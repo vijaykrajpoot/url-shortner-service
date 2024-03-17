@@ -1,0 +1,60 @@
+openapi: 3.0.0
+servers:
+  - url: 'http://petstore.swagger.io/v2'
+info:
+  description: >-
+    This service convert the long URL in the short URL
+  version: 1.0.0
+  title: URL Shortner
+  license:
+    name: Apache-2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: url-shortner
+    description: Short the URL
+paths:
+  /url/shortUrl:
+    post:
+      tags:
+        - url
+      summary: Short the URL
+      description: 'Short URL'
+      operationId: shortUrl
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/URL'
+      responses:
+        '200':
+          description: URL is shorted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/URL'
+        '405':
+          description: Invalid input
+  /url/longUrl:
+    get:
+      tags:
+        - url
+      summary: Find long URL
+      description: Return the long URL
+      operationId: findLongUrl
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/URL'
+        '400':
+          description: Invalid status value
+components:
+  schemas:
+    URL:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
