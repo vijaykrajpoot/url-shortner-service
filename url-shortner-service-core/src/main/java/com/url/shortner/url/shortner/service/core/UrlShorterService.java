@@ -1,6 +1,6 @@
 package com.url.shortner.url.shortner.service.core;
 
-public interface UrlShortnerService {
+public interface UrlShorterService {
 
     String shortUrl(String longUrl);
 }

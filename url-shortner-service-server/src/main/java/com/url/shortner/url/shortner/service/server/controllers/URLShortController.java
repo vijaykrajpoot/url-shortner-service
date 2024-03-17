@@ -2,7 +2,7 @@ package com.url.shortner.url.shortner.service.server.controllers;
 
 import com.url.shortner.url.shortner.service.api.UrlApi;
 import com.url.shortner.url.shortner.service.api.config.api.model.URL;
-import com.url.shortner.url.shortner.service.core.UrlShorterServiceCoreService;
+import com.url.shortner.url.shortner.service.core.UrlShorterServiceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,10 +21,10 @@ public class URLShortController implements UrlApi {
         return "Url Shortner Service";
     }
 
-    UrlShorterServiceCoreService urlShorterServiceCoreService;
+    UrlShorterServiceService urlShorterServiceService;
 
-    public URLShortController(UrlShorterServiceCoreService urlShorterServiceCoreService) {
-        this.urlShorterServiceCoreService = urlShorterServiceCoreService;
+    public URLShortController(UrlShorterServiceService urlShorterServiceService) {
+        this.urlShorterServiceService = urlShorterServiceService;
     }
 
     @Override
@@ -33,7 +33,7 @@ public class URLShortController implements UrlApi {
         URI uri = null;
         System.out.println("url:" + url.getUrl().toString());
 
-       String shortUrl= urlShorterServiceCoreService.shortUrl(url.getUrl().toString());
+       String shortUrl= urlShorterServiceService.shortUrl(url.getUrl().toString());
 
         try {
             uri = new URI(shortUrl);
