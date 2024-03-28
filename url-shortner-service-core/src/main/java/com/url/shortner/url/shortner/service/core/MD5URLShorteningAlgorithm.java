@@ -23,7 +23,7 @@ public class MD5URLShorteningAlgorithm implements URLShorteningAlgorithm {
     }
 
     @Override
-    public String shorten(String input) {
+    public String generateHash(String input) {
         if (input == null) {
             throw new IllegalArgumentException("Inout can't be null");
         }
@@ -31,18 +31,24 @@ public class MD5URLShorteningAlgorithm implements URLShorteningAlgorithm {
         // Add nano second to ensure has is always unique
         input = input + System.nanoTime();
         byte[] byteArr = messageDigest.digest(input.getBytes());
+        // byteArr: [124, 53, 107, -80, 11, -80, -8, 39, -77, 46, -28, 121, 81, -52, -127, 56]
         logger.debug("byteArr: {}", Arrays.toString(byteArr));
         // Convert byte array to bigInt by passing signum as 1 to eusure +ve big Integer
+        // bigInteger :165101647376434385275152220028672966968
         BigInteger bigInteger = new BigInteger(1, byteArr);
         logger.debug("bigInteger :{}", bigInteger);
         String bString = bigInteger.toString(2);
-        logger.debug("Binary String from BingInteger:{} With length:{}", bString, bString.length());
+        //Binary String: 10001100101011111100010000000110110000101111101110110001011100101110101000111000100110101001001100101011101010011010100001001 from BingInteger With length:125
+        logger.debug("Binary String: {} from BingInteger With length:{}", bString, bString.length());
         // append bString
         binaryStr.append(bString);
         // in case of length is less than 128 then pad the string with leading zero
         while (binaryStr.length() < 128) {
             binaryStr.insert(0, "0");
         }
-        return binaryStr.toString();
+        bString = binaryStr.toString();
+        //  Binary String:  00010001100101011111100010000000110110000101111101110110001011100101110101000111000100110101001001100101011101010011010100001001 After Padding With length:128
+        logger.debug("Binary String:  {} After Padding With length:{}", bString, bString.length());
+        return bString;
     }
 }

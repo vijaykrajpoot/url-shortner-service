@@ -3,7 +3,6 @@ package com.url.shortner.url.shortner.service.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,7 +18,7 @@ public class UrlShorterServiceService implements UrlShorterService {
     @Override
     public String shortUrl(String longUrl) {
         logger.info("longUrl :{}", longUrl);
-        String binaryString = urlShorteningAlgorithm.shorten(longUrl);
+        String binaryString = urlShorteningAlgorithm.generateHash(longUrl);
         int shortenURLLength = 6;
         int bitSegment = shortenURLLength * 6;
         StringBuilder shortURL = new StringBuilder();
