@@ -23,7 +23,7 @@ public class MD5URLShorteningAlgorithm implements URLShorteningAlgorithm {
     }
 
     @Override
-    public String generateHash(String input) {
+    public String binaryString(String input) {
         if (input == null) {
             throw new IllegalArgumentException("Inout can't be null");
         }

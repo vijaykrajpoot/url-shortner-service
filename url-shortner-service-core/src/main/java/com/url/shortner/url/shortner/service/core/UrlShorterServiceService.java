@@ -10,6 +10,9 @@ public class UrlShorterServiceService implements UrlShorterService {
     private static final Logger logger = LoggerFactory.getLogger(UrlShorterServiceService.class);
     private final URLShorteningAlgorithm urlShorteningAlgorithm;
 
+    private static final int BITS_SEGMENT = 6;
+
+    private static final int urlLength = 6;
 
     public UrlShorterServiceService(URLShorteningAlgorithm urlShorteningAlgorithm) {
         this.urlShorteningAlgorithm = urlShorteningAlgorithm;
@@ -18,14 +21,20 @@ public class UrlShorterServiceService implements UrlShorterService {
     @Override
     public String shortUrl(String longUrl) {
         logger.info("longUrl :{}", longUrl);
-        String binaryString = urlShorteningAlgorithm.generateHash(longUrl);
-        int shortenURLLength = 6;
-        int bitSegment = shortenURLLength * 6;
+        String binaryString = urlShorteningAlgorithm.binaryString(longUrl);
+        // Need this multiplication because 6 bits each time
+        // so if we need X length URL it must be (X*Six Bit) and should not go beyond 128 long
+
+        int bitSegment = urlLength * BITS_SEGMENT;
+        if (bitSegment > 128) {
+            throw new IllegalArgumentException("Please check shortner URL length. It should not be > 21 ");
+        }
         StringBuilder shortURL = new StringBuilder();
-        for (int i = 0; i < bitSegment; i += 6) {
-            String sixBits = binaryString.substring(i, Math.min(i + 6, binaryString.length()));
+        for (int i = 0; i < bitSegment; i += BITS_SEGMENT) {
+            logger.debug("Index Value:{}", i);
+            String sixBits = binaryString.substring(i, Math.min(i + BITS_SEGMENT, binaryString.length()));
             int decimalValue = Integer.parseInt(sixBits, 2);
-           // logger.debug("sixBits:" + sixBits + " Decimal Value:" + decimalValue);
+            logger.debug("sixBits:" + sixBits + " Decimal Value:" + decimalValue);
             shortURL.append(getBase64Character(decimalValue));
         }
         String finalShortURL = shortURL.toString();
