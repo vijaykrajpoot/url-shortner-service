@@ -39,15 +39,22 @@ paths:
       tags:
         - url
       summary: Find long URL
-      description: Return the long URL
-      operationId: findLongUrl
+      description: Retrieve the long URL from a short URL
+      operationId: longUrl
+      parameters:
+          - name: url
+            in: query
+            description: Short URL to be expanded
+            required: true
+            schema:
+              type: string
       responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
+        '302':
+          description: Successfully retrieved long URL
+          headers:
+            Location:
               schema:
-                $ref: '#/components/schemas/URL'
+                type: string
         '400':
           description: Invalid status value
 components:

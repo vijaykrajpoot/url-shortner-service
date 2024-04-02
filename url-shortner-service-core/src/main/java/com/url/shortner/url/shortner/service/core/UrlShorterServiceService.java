@@ -1,8 +1,11 @@
 package com.url.shortner.url.shortner.service.core;
 
 
+import com.url.shortner.url.shortner.service.persistence.entities.URLEntity;
+import com.url.shortner.url.shortner.service.persistence.repositories.URLHashMapRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -10,13 +13,17 @@ public class UrlShorterServiceService implements UrlShorterService {
     private static final Logger logger = LoggerFactory.getLogger(UrlShorterServiceService.class);
     private final URLShorteningAlgorithm urlShorteningAlgorithm;
 
+
+    private final URLHashMapRepository urlHashMapRepository;
     private static final int BITS_SEGMENT = 6;
 
     private static final int urlLength = 6;
 
-    public UrlShorterServiceService(URLShorteningAlgorithm urlShorteningAlgorithm) {
+    public UrlShorterServiceService(URLShorteningAlgorithm urlShorteningAlgorithm, URLHashMapRepository urlHashMapRepository) {
         this.urlShorteningAlgorithm = urlShorteningAlgorithm;
+        this.urlHashMapRepository = urlHashMapRepository;
     }
+
 
     @Override
     public String shortUrl(String longUrl) {
@@ -39,7 +46,19 @@ public class UrlShorterServiceService implements UrlShorterService {
         }
         String finalShortURL = shortURL.toString();
         logger.info("Final Short URL Value :" + finalShortURL);
-        return "https://mydomain.com/" + finalShortURL;
+        finalShortURL = "https://mydomain.com/" + finalShortURL;
+        URLEntity url = new URLEntity();
+        url.setSortURL(finalShortURL);
+        url.setLongURL(longUrl);
+        urlHashMapRepository.saveURL(url);
+        return finalShortURL;
+    }
+
+
+    @Override
+    public String findLongUrl(String sortUrl) {
+        logger.debug("sortURL:" + sortUrl);
+        return urlHashMapRepository.getLongURL(sortUrl);
     }
 
     public static char getBase64Character(int decimalValue) {

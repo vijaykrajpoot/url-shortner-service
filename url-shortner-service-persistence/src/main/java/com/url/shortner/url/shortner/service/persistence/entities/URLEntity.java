@@ -8,15 +8,35 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "TRANSACTION")
-public class TransactionEntity {
+@Table(name = "URL")
+public class URLEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
 
+    private String sortURL;
+
+    private String longURL;
+
     public Long getId() {
         return id;
+    }
+
+    public String getSortURL() {
+        return sortURL;
+    }
+
+    public void setSortURL(String sortURL) {
+        this.sortURL = sortURL;
+    }
+
+    public String getLongURL() {
+        return longURL;
+    }
+
+    public void setLongURL(String longURL) {
+        this.longURL = longURL;
     }
 }

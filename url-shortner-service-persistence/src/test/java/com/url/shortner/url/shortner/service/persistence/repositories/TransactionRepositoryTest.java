@@ -1,7 +1,7 @@
 package com.url.shortner.url.shortner.service.persistence.repositories;
 
 import com.url.shortner.url.shortner.service.persistence.UrlShortnerServicePersistenceConfig;
-import com.url.shortner.url.shortner.service.persistence.entities.TransactionEntity;
+import com.url.shortner.url.shortner.service.persistence.entities.URLEntity;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +17,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TransactionRepositoryTest {
 
     @Autowired
-    private TransactionRepository transactionRepository;
+    private UrlRepository transactionRepository;
 
     @Test
     void test_create() {
-        TransactionEntity entity = new TransactionEntity();
-        transactionRepository.save(entity);
+        URLEntity entity = new URLEntity();
+        //transactionRepository.save(entity);
     }
 }

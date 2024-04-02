@@ -3,11 +3,13 @@ package com.url.shortner.url.shortner.service.server.controllers;
 import com.url.shortner.url.shortner.service.api.UrlApi;
 import com.url.shortner.url.shortner.service.api.config.api.model.URL;
 import com.url.shortner.url.shortner.service.core.UrlShorterServiceService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -15,6 +17,7 @@ import java.net.URISyntaxException;
 @RestController
 @RequestMapping("/url")
 public class URLShortController implements UrlApi {
+    private static final Logger logger = LoggerFactory.getLogger(URLShortController.class);
 
     @RequestMapping("/")
     public String root() {
@@ -33,7 +36,7 @@ public class URLShortController implements UrlApi {
         URI uri = null;
         System.out.println("url:" + url.getUrl().toString());
 
-       String shortUrl= urlShorterServiceService.shortUrl(url.getUrl().toString());
+        String shortUrl = urlShorterServiceService.shortUrl(url.getUrl().toString());
 
         try {
             uri = new URI(shortUrl);
@@ -43,5 +46,22 @@ public class URLShortController implements UrlApi {
         URL shortURL = new URL();
         shortURL.setUrl(uri);
         return new ResponseEntity<>(shortURL, HttpStatus.OK);
+    }
+
+
+    //    @Override
+    @GetMapping(value = "/longUrl")
+    public ResponseEntity<Void> longUrl(String shortUrl) {
+        String longURL = urlShorterServiceService.findLongUrl(shortUrl);
+        logger.debug("Found Long URL:"+longURL);
+        if (longURL != null) {
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setLocation(URI.create(longURL)); // Set location header with the long URL
+            return new ResponseEntity<>(httpHeaders, HttpStatus.FOUND);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+
     }
 }
