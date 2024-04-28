@@ -10,6 +10,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 @Service
+
 public class MD5URLShorteningAlgorithm implements URLShorteningAlgorithm {
     private static final Logger logger = LoggerFactory.getLogger(MD5URLShorteningAlgorithm.class);
     private final MessageDigest messageDigest;
@@ -23,7 +24,7 @@ public class MD5URLShorteningAlgorithm implements URLShorteningAlgorithm {
     }
 
     @Override
-    public String binaryString(String input) {
+    public String generateUniqueBinaryString(String input) {
         if (input == null) {
             throw new IllegalArgumentException("Inout can't be null");
         }

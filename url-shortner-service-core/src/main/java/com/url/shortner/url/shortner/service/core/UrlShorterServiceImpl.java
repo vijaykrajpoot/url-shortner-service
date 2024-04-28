@@ -1,7 +1,6 @@
 package com.url.shortner.url.shortner.service.core;
 
 
-import com.sun.istack.NotNull;
 import com.url.shortner.url.shortner.service.persistence.entities.URLEntity;
 import com.url.shortner.url.shortner.service.persistence.repositories.URLHashMapRepository;
 import org.slf4j.Logger;
@@ -19,7 +18,7 @@ public class UrlShorterServiceImpl implements UrlShorterService {
 
     private static final int urlLength = 6;
 
-    public UrlShorterServiceImpl(URLShorteningAlgorithm urlShorteningAlgorithm, URLHashMapRepository urlHashMapRepository) {
+    public UrlShorterServiceImpl(URLHashMapRepository urlHashMapRepository, URLShorteningAlgorithm urlShorteningAlgorithm) {
         this.urlShorteningAlgorithm = urlShorteningAlgorithm;
         this.urlHashMapRepository = urlHashMapRepository;
     }
@@ -28,11 +27,13 @@ public class UrlShorterServiceImpl implements UrlShorterService {
     @Override
     public String shortUrl(String longUrl) {
         logger.info("longUrl :{}", longUrl);
-        String binaryString = urlShorteningAlgorithm.binaryString(longUrl);
-        // Need this multiplication because 6 bits each time
-        // so if we need X length URL it must be (X*Six Bit) and should not go beyond 128 long
+        String binaryString = urlShorteningAlgorithm.generateUniqueBinaryString(longUrl);
 
+        // Need this multiplication because 6 bits each time
+        // so if we need X length URL it must be ( length * BITS_SEGMENT (Six Bit)) and should not go beyond 128 long
         int bitSegment = urlLength * BITS_SEGMENT;
+
+
         if (bitSegment > 128) {
             throw new IllegalArgumentException("Please check shortner URL length. It should not be > 21 ");
         }
