@@ -1,25 +1,25 @@
 package com.url.shortner.url.shortner.service.core;
 
 
+import com.sun.istack.NotNull;
 import com.url.shortner.url.shortner.service.persistence.entities.URLEntity;
 import com.url.shortner.url.shortner.service.persistence.repositories.URLHashMapRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UrlShorterServiceService implements UrlShorterService {
-    private static final Logger logger = LoggerFactory.getLogger(UrlShorterServiceService.class);
+public class UrlShorterServiceImpl implements UrlShorterService {
+    private static final Logger logger = LoggerFactory.getLogger(UrlShorterServiceImpl.class);
     private final URLShorteningAlgorithm urlShorteningAlgorithm;
-
+    private static final String BASE_64_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
     private final URLHashMapRepository urlHashMapRepository;
     private static final int BITS_SEGMENT = 6;
 
     private static final int urlLength = 6;
 
-    public UrlShorterServiceService(URLShorteningAlgorithm urlShorteningAlgorithm, URLHashMapRepository urlHashMapRepository) {
+    public UrlShorterServiceImpl(URLShorteningAlgorithm urlShorteningAlgorithm, URLHashMapRepository urlHashMapRepository) {
         this.urlShorteningAlgorithm = urlShorteningAlgorithm;
         this.urlHashMapRepository = urlHashMapRepository;
     }
@@ -41,11 +41,11 @@ public class UrlShorterServiceService implements UrlShorterService {
             logger.debug("Index Value:{}", i);
             String sixBits = binaryString.substring(i, Math.min(i + BITS_SEGMENT, binaryString.length()));
             int decimalValue = Integer.parseInt(sixBits, 2);
-            logger.debug("sixBits:" + sixBits + " Decimal Value:" + decimalValue);
+            logger.debug("sixBits:{} Decimal Value :{}", sixBits, decimalValue);
             shortURL.append(getBase64Character(decimalValue));
         }
         String finalShortURL = shortURL.toString();
-        logger.info("Final Short URL Value :" + finalShortURL);
+        logger.info("Final Short URL Value : {}", finalShortURL);
         finalShortURL = "https://mydomain.com/" + finalShortURL;
         URLEntity url = new URLEntity();
         url.setSortURL(finalShortURL);
@@ -57,15 +57,12 @@ public class UrlShorterServiceService implements UrlShorterService {
 
     @Override
     public String findLongUrl(String sortUrl) {
-        logger.debug("sortURL:" + sortUrl);
+        logger.debug("sortURL:{}", sortUrl);
         return urlHashMapRepository.getLongURL(sortUrl);
     }
 
     public static char getBase64Character(int decimalValue) {
-        // Base64 character array
-        String base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-        // Map decimal value to Base64 character
-        return base64Chars.charAt(decimalValue);
+        return BASE_64_CHARS.charAt(decimalValue);
     }
 
 

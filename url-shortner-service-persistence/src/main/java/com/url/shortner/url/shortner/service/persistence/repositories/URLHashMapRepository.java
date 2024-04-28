@@ -16,11 +16,11 @@ public class URLHashMapRepository {
 
     public void saveURL(URLEntity url) {
         map.put(url.getSortURL(), url.getLongURL());
-        logger.debug("Map Data:"+ map);
+        logger.debug("Map Data:{}", map);
     }
 
     public String getLongURL(String sortURL) {
-        logger.debug("map:" + map);
+        logger.debug("map:{}", map);
         return map.get(sortURL);
     }
 

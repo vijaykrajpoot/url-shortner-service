@@ -28,7 +28,7 @@ public class MD5URLShorteningAlgorithm implements URLShorteningAlgorithm {
             throw new IllegalArgumentException("Inout can't be null");
         }
         StringBuilder binaryStr = new StringBuilder();
-        // Add nano second to ensure has is always unique
+        // Add nanosecond to ensure has is always unique
         input = input + System.nanoTime();
         byte[] byteArr = messageDigest.digest(input.getBytes());
         // byteArr: [124, 53, 107, -80, 11, -80, -8, 39, -77, 46, -28, 121, 81, -52, -127, 56]
